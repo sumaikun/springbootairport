@@ -1,0 +1,3 @@
+src/main/resources/clientkeystore.jks
+src/main/resources/myProject_keyAndCertBundle.jks
+target
