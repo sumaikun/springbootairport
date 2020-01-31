@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import app.models.Greeting;
-
 import app.services.RestServices;
 
 @RestController
@@ -47,7 +46,7 @@ public class VisaController {
 	{
 		 System.out.println("inquiry and validate card data on endpoint");
 		 
-		 Map<String, Object> responseObj = new HashMap<String, Object>();;		 
+		 Map<String, Object> responseObj = new HashMap<String, Object>();		 
 		 
 		 try {			 
 				 ResponseEntity<String> visaValidation = restServices.validateVisaCard((String) input.get("cardCvv2Value"),

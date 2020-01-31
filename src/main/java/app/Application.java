@@ -5,11 +5,17 @@ import org.json.JSONObject;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
+
+import app.services.DragonServices;
 import app.services.RestServices;
 
 
 @SpringBootApplication
+@EnableMongoAuditing
 public class Application implements CommandLineRunner{
 	
 	private RestServices restServices;
@@ -22,6 +28,11 @@ public class Application implements CommandLineRunner{
 		SpringApplication.run(Application.class, args);
 		System.out.println("application main");
 		
+	}
+	
+	@Bean(name = "dragonServices")
+	public DragonServices dragonServices(){
+		return new DragonServices();
 	}
 	
 	@Override

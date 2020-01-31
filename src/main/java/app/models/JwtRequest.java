@@ -1,4 +1,4 @@
-package app.model;
+package app.models;
 
 import java.io.Serializable;
 public class JwtRequest implements Serializable {

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import app.services.JwtUserDetailsService;
 import app.config.JwtTokenUtil;
-import app.model.JwtRequest;
-import app.model.JwtResponse;
+import app.models.JwtRequest;
+import app.models.JwtResponse;
 @RestController
 @CrossOrigin
 public class JwtAuthenticationController {
@@ -30,11 +30,16 @@ public class JwtAuthenticationController {
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+		
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		
 		final UserDetails userDetails = userDetailsService
 				.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
-		return ResponseEntity.ok(new JwtResponse(token));
+		
+		System.out.println(userDetails);
+		
+		return ResponseEntity.ok(new JwtResponse(token,userDetails.getAuthorities()));
 	}
 	
 	private void authenticate(String username, String password) throws Exception {

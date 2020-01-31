@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 @Component
 public class JwtTokenUtil implements Serializable {
 	
@@ -19,6 +20,12 @@ public class JwtTokenUtil implements Serializable {
 	
 	@Value("${jwt.secret}")
 	private String secret;
+	
+	@Value("${dragon.iss}")
+	private String dragonIss;
+	
+	@Value("${dragon.secret}")
+	private String dragonSecret;
 	
 	//retrieve username from jwt token
 	public String getUsernameFromToken(String token) {
@@ -61,11 +68,42 @@ public class JwtTokenUtil implements Serializable {
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 		.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 		.signWith(SignatureAlgorithm.HS512, secret).compact();
-	}
+	}	
+	
 	
 	//validate token
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = getUsernameFromToken(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
+	
+	public Boolean validateDragonToken(String token) {
+		
+		if(token == null)
+		{
+			return false;
+		}
+		else {
+			
+			try
+			{
+				return isTokenExpired(token);
+			}
+			catch(SignatureException e)
+			{
+				return false;
+			}
+			
+		}
+		
+	}
+	
+	
+	public String generateDragonToken() {		
+		return Jwts.builder().setIssuer(dragonIss).setIssuedAt(new Date(System.currentTimeMillis()))
+		.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+		.signWith(SignatureAlgorithm.HS256, dragonSecret).compact();
+	}
+	
+	
 }
